@@ -105,21 +105,21 @@ for (var i = 0; i < imgCount; i++) {
     imgStore[i] = new Image();
 
     if (i == 0) {
-        imgStore[i].src = "img/node/node_0_Square.png";
+        imgStore[i].src = "img/Node/node_0_Square.png";
     } else if (i == 1) {
-        imgStore[i].src = "img/node/node_1_Pass.png";
+        imgStore[i].src = "img/Node/node_1_Pass.png";
     } else if (i == 2) {
-        imgStore[i].src = "img/node/node_2_Circle_0.png";
+        imgStore[i].src = "img/Node/node_2_Circle_0.png";
     } else if (i == 3) {
-        imgStore[i].src = "img/node/node_3_Circle_1.png";
+        imgStore[i].src = "img/Node/node_3_Circle_1.png";
     } else if (i == 4) {
-        imgStore[i].src = "img/node/node_4_Circle_2.png";
+        imgStore[i].src = "img/Node/node_4_Circle_2.png";
     } else if (i == 5) {
-        imgStore[i].src = "img/node/node_5_Circle_3.png";
+        imgStore[i].src = "img/Node/node_5_Circle_3.png";
     } else if (i == 6) {
-        imgStore[i].src = "img/node/node_1_Alarm.png";
+        imgStore[i].src = "img/Node/node_1_Alarm.png";
     } else if (i == 7) {
-        imgStore[i].src = "img/node/node_2_Circle_On.png";
+        imgStore[i].src = "img/Node/node_2_Circle_On.png";
     }
 }
 
