@@ -690,7 +690,7 @@ function update(mouseEvent) {
     } else if ((GAMESTATE == 20 && GAMEMODE == 0) || (GAMESTATE == 30 && GAMEMODE == 1)) { //GAME PLANNING
         ////////////////////
         // RUN HACK
-        if (GAMESTATE == 0 && (mouseEvent.offsetX > 125 && mouseEvent.offsetX < 275 && mouseEvent.offsetY > 430 && mouseEvent.offsetY < 495)) {
+        if (GAMEMODE == 0 && (mouseEvent.offsetX > 125 && mouseEvent.offsetX < 275 && mouseEvent.offsetY > 430 && mouseEvent.offsetY < 495)) {
             STARTBEAM = true;
             GAMESTATE = 30;
         }
