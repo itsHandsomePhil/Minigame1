@@ -810,7 +810,7 @@ function menuScreen(mouseEvent) {
         //start game button text
         ctx.font = "15px Arial";
         ctx.fillText("Timed Mode", 151, 392);
-        ctx.fillText("Chase Mode", 273, 392);
+        ctx.fillText("Chase Mode", 270, 392);
 
         //HOW IT WORKS
 
@@ -898,7 +898,7 @@ function menuScreen(mouseEvent) {
 
             //WINDOW TITLE
             ctx.font = "20px Arial";
-            ctx.fillText("HYPER MODE", 180, 96);
+            ctx.fillText("CHASE MODE", 180, 96);
 
 
             //THE PIECES
