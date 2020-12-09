@@ -626,7 +626,7 @@ function update(mouseEvent) {
             timer = 30;
         } else if (mouseEvent.offsetX > 260 && mouseEvent.offsetX < 360 && mouseEvent.offsetY > 370 && mouseEvent.offsetY < 400) {
             GAMEMODE = 1; //HYPER MODE
-            beamSpeed = 1;
+            beamSpeed = 3;
             timer = 5;
         }
 
@@ -655,9 +655,9 @@ function update(mouseEvent) {
         ////////////////////
         // NODE COLLISION 
         // ROW 1
-        if ((GAMESTATE == 20 && GAMEMODE == 0) || (GAMESTATE == 30 && GAMEMODE == 1)) {
+        if ((GAMESTATE == 20 && GAMEMODE == 0) || GAMEMODE == 1) {
             if (mouseEvent.offsetX > 75 && mouseEvent.offsetX < 125 && mouseEvent.offsetY > 70 && mouseEvent.offsetY < 125) {
-                if (nodes[0][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[0][99] == true))) {
+                if (nodes[0][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) { // && nodes[0][99] == true
                     if (nodes[0][1] == 3) {
                         nodes[0][1] = 0
                     } else {
@@ -665,7 +665,7 @@ function update(mouseEvent) {
                     }
                 }
             } else if (mouseEvent.offsetX > 175 && mouseEvent.offsetX < 225 && mouseEvent.offsetY > 70 && mouseEvent.offsetY < 125) {
-                if (nodes[1][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[1][99] == true))) {
+                if (nodes[1][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
                     if (nodes[1][1] == 3) {
                         nodes[1][1] = 0
                     } else {
@@ -673,7 +673,7 @@ function update(mouseEvent) {
                     }
                 }
             } else if (mouseEvent.offsetX > 275 && mouseEvent.offsetX < 325 && mouseEvent.offsetY > 70 && mouseEvent.offsetY < 125) {
-                if (nodes[2][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[2][99] == true))) {
+                if (nodes[2][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
                     if (nodes[2][1] == 3) {
                         nodes[2][1] = 0
                     } else {
@@ -681,7 +681,7 @@ function update(mouseEvent) {
                     }
                 }
             } else if (mouseEvent.offsetX > 375 && mouseEvent.offsetX < 425 && mouseEvent.offsetY > 70 && mouseEvent.offsetY < 125) {
-                if (nodes[3][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[3][99] == true))) {
+                if (nodes[3][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
                     if (nodes[3][1] == 3) {
                         nodes[3][1] = 0
                     } else {
@@ -690,7 +690,7 @@ function update(mouseEvent) {
                 }
                 //ROW 2
             } else if (mouseEvent.offsetX > 75 && mouseEvent.offsetX < 125 && mouseEvent.offsetY > 170 && mouseEvent.offsetY < 225) {
-                if (nodes[4][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[4][99] == true))) {
+                if (nodes[4][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
                     if (nodes[4][1] == 3) {
                         nodes[4][1] = 0
                     } else {
@@ -698,7 +698,7 @@ function update(mouseEvent) {
                     }
                 }
             } else if (mouseEvent.offsetX > 175 && mouseEvent.offsetX < 225 && mouseEvent.offsetY > 170 && mouseEvent.offsetY < 225) {
-                if (nodes[5][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[5][99] == true))) {
+                if (nodes[5][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
                     if (nodes[5][1] == 3) {
                         nodes[5][1] = 0
                     } else {
@@ -706,7 +706,7 @@ function update(mouseEvent) {
                     }
                 }
             } else if (mouseEvent.offsetX > 275 && mouseEvent.offsetX < 325 && mouseEvent.offsetY > 170 && mouseEvent.offsetY < 225) {
-                if (nodes[6][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[6][99] == true))) {
+                if (nodes[6][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
                     if (nodes[6][1] == 3) {
                         nodes[6][1] = 0
                     } else {
@@ -714,7 +714,7 @@ function update(mouseEvent) {
                     }
                 }
             } else if (mouseEvent.offsetX > 375 && mouseEvent.offsetX < 425 && mouseEvent.offsetY > 170 && mouseEvent.offsetY < 225) {
-                if (nodes[7][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[7][99] == true))) {
+                if (nodes[7][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
                     if (nodes[7][1] == 3) {
                         nodes[7][1] = 0
                     } else {
@@ -723,7 +723,7 @@ function update(mouseEvent) {
                 }
                 //ROW 3
             } else if (mouseEvent.offsetX > 75 && mouseEvent.offsetX < 125 && mouseEvent.offsetY > 270 && mouseEvent.offsetY < 325) {
-                if (nodes[8][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[8][99] == true))) {
+                if (nodes[8][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
                     if (nodes[8][1] == 3) {
                         nodes[8][1] = 0
                     } else {
@@ -731,7 +731,7 @@ function update(mouseEvent) {
                     }
                 }
             } else if (mouseEvent.offsetX > 175 && mouseEvent.offsetX < 225 && mouseEvent.offsetY > 270 && mouseEvent.offsetY < 325) {
-                if (nodes[9][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[9][99] == true))) {
+                if (nodes[9][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
                     if (nodes[9][1] == 3) {
                         nodes[9][1] = 0
                     } else {
@@ -739,7 +739,7 @@ function update(mouseEvent) {
                     }
                 }
             } else if (mouseEvent.offsetX > 275 && mouseEvent.offsetX < 325 && mouseEvent.offsetY > 270 && mouseEvent.offsetY < 325) {
-                if (nodes[10][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[10][99] == true))) {
+                if (nodes[10][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
                     if (nodes[10][1] == 3) {
                         nodes[10][1] = 0
                     } else {
@@ -747,7 +747,7 @@ function update(mouseEvent) {
                     }
                 }
             } else if (mouseEvent.offsetX > 375 && mouseEvent.offsetX < 425 && mouseEvent.offsetY > 270 && mouseEvent.offsetY < 325) {
-                if (nodes[11][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[11][99] == true))) {
+                if (nodes[11][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
                     if (nodes[11][1] == 3) {
                         nodes[11][1] = 0
                     } else {
@@ -756,7 +756,7 @@ function update(mouseEvent) {
                 }
                 //ROW 4
             } else if (mouseEvent.offsetX > 75 && mouseEvent.offsetX < 125 && mouseEvent.offsetY > 370 && mouseEvent.offsetY < 425) {
-                if (nodes[12][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[12][99] == true))) {
+                if (nodes[12][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
                     if (nodes[12][1] == 3) {
                         nodes[12][1] = 0
                     } else {
@@ -764,7 +764,7 @@ function update(mouseEvent) {
                     }
                 }
             } else if (mouseEvent.offsetX > 175 && mouseEvent.offsetX < 225 && mouseEvent.offsetY > 370 && mouseEvent.offsetY < 425) {
-                if (nodes[13][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[13][99] == true))) {
+                if (nodes[13][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
                     if (nodes[13][1] == 3) {
                         nodes[13][1] = 0
                     } else {
@@ -772,7 +772,7 @@ function update(mouseEvent) {
                     }
                 }
             } else if (mouseEvent.offsetX > 275 && mouseEvent.offsetX < 325 && mouseEvent.offsetY > 370 && mouseEvent.offsetY < 425) {
-                if (nodes[14][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[14][99] == true))) {
+                if (nodes[14][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
                     if (nodes[14][1] == 3) {
                         nodes[14][1] = 0
                     } else {
@@ -780,7 +780,7 @@ function update(mouseEvent) {
                     }
                 }
             } else if (mouseEvent.offsetX > 375 && mouseEvent.offsetX < 425 && mouseEvent.offsetY > 370 && mouseEvent.offsetY < 425) {
-                if (nodes[15][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[15][99] == true))) {
+                if (nodes[15][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
                     if (nodes[15][1] == 3) {
                         nodes[15][1] = 0
                     } else {
@@ -911,7 +911,7 @@ function menuScreen(mouseEvent) {
         } else if (GAMEMODE == 1) {
             for (var tut = 0; tut < 4; tut++) {
                 if (tut == 0) {
-                    ctx.drawImage(imgStore[7], xmenuDraw, ymenuDraw, 35, 35);
+                    ctx.drawImage(imgStore[3], xmenuDraw, ymenuDraw, 35, 35);
                 } else if (tut == 1) {
                     ctx.drawImage(imgStore[5], xmenuDraw, ymenuDraw, 35, 35);
                 } else {
@@ -932,15 +932,14 @@ function menuScreen(mouseEvent) {
 
             //SHOOTER TUTORIAL
             ctx.font = "10px Arial";
-            ctx.fillText("- Click to rotate if highlighted in green", 170, 135);
+            ctx.fillText("- Click to rotate", 170, 135);
             ctx.fillText("- Beam will exit the barrel", 170, 145);
-            ctx.fillText("- Beam can enter any side", 170, 155);
+            ctx.fillText("- Beam fires when all bars are lit", 170, 155);
 
             //CHARGED SHOOTER TUTORIAL
             ctx.font = "10px Arial";
-            ctx.fillText("- Node is charged and about to fire", 170, 175);
-            ctx.fillText("- Beam goes in one side out the other", 170, 185);
-            ctx.fillText("- Cannot be rotated ", 170, 195);
+            ctx.fillText("- Node is charged and will fire when all", 170, 180);
+            ctx.fillText("  three beams are lit up.", 170, 190);
 
             //PASSTHROUGH TUTORIAL
             ctx.font = "10px Arial";
@@ -957,9 +956,9 @@ function menuScreen(mouseEvent) {
             //HOW IT WORKS
             ctx.font = "11px Arial";
             ctx.fillText("The Beam starts when the game starts. Player", 127, 300);
-            ctx.fillText("arranges the nodes as they become active to", 127, 315);
-            ctx.fillText("lead the beam to the Finish. If the beam hits", 127, 330);
-            ctx.fillText("the board edge, the flat side of a Pass Through", 127, 345);
+            ctx.fillText("arranges the nodes ahead of the beam to", 127, 315);
+            ctx.fillText("lead it to the Finish. If the beam hits the", 127, 330);
+            ctx.fillText("board edge, the flat side of a Pass Through", 127, 345);
             ctx.fillText("or an Alarm it will cause the player to fail.", 127, 360);
         }
 
@@ -1063,7 +1062,8 @@ function timerDraw() {
 }
 
 function nodeChargeTimer(cState) {
-    var chargeTimer = 6;
+    var chargeTimer = 3;
+    nodes[cState][98] = 3;
     setInterval(function() {
         chargeTimer--;
         if (chargeTimer > 3) {
