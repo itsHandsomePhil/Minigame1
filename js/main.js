@@ -1043,7 +1043,7 @@ function nodeChargeTimer(cState) {
         chargeTimer--;
         if (chargeTimer > 3) {
             nodes[cState][98] = 3;
-        } else if (chargeTimer <= 2 || chargeTimer > 0) {
+        } else if (chargeTimer <= 2 && chargeTimer > 0) {
             nodes[cState][98] = 4;
         } else if (chargeTimer == 0) {
             nodes[cState][98] = 5;
