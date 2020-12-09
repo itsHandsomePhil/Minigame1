@@ -13,6 +13,7 @@ var failReason = 0;
 //0 = Timer
 //1 = Wall
 //2 = Alarm
+//3 = Beam into itself
 
 var GAMEMODE = 0;
 //0 = timed
@@ -89,6 +90,7 @@ var beamStoreSpot = 0; //where we are in the beam
 var beamSpeed = 3; //how fast the beam moves
 var xbeamEnd = 0; //check the beam end
 var ybeamEnd = 0; //check the beam end
+var beamPath = []; //store the beam's path node to node
 
 //initialize beamStoreSpot
 for (bstore = 0; bstore < 100; bstore++) {
@@ -97,6 +99,10 @@ for (bstore = 0; bstore < 100; bstore++) {
     beamStore[bstore][1] = 0;
     beamStore[bstore][2] = 0;
     beamStore[bstore][3] = 0;
+}
+
+for (var bp = 0; bp < nodeCount; bp++) {
+    beamPath[bp] = 0;
 }
 
 var imgStore = [];
@@ -128,6 +134,7 @@ for (var i = 0; i < imgCount; i++) {
 
 var TIMERSTART = false; //start the timer?
 var timer = 30; //how long is the timer?
+var myChargeTimer;
 
 function draw() {
     gameCanvas = document.getElementById("gameCanvas");
@@ -434,6 +441,8 @@ function drawBeamTimed() {
             NODENUM = NEXTNODE;
             BEAMCOUNT = 1;
 
+            beamPath[beamStoreSpot] = NODENUM;
+
             //start storing the beam to draw all the time
             beamStore[0][0] = startPos[0];
             beamStore[0][1] = startPos[1] + 26;
@@ -590,6 +599,17 @@ function drawBeamTimed() {
             PREVNODE = NODENUM;
             NODENUM = NEXTNODE;
 
+            beamPath[beamStoreSpot] = NODENUM;
+
+            //have we been here before?
+            for (var bc = 0; bc < beamStoreSpot; bc++) {
+                if (beamPath[bc] == NODENUM) {
+                    FAILSTATE = true;
+                    GAMESTATE = 50;
+                    failReason = 3; //beam collision
+                }
+            }
+
             //reset the beamWidth
             beamWidth = 1;
             beamStoreSpot++;
@@ -670,7 +690,7 @@ function update(mouseEvent) {
     } else if ((GAMESTATE == 20 && GAMEMODE == 0) || (GAMESTATE == 30 && GAMEMODE == 1)) { //GAME PLANNING
         ////////////////////
         // RUN HACK
-        if (mouseEvent.offsetX > 125 && mouseEvent.offsetX < 275 && mouseEvent.offsetY > 430 && mouseEvent.offsetY < 495) {
+        if (GAMESTATE == 0 && (mouseEvent.offsetX > 125 && mouseEvent.offsetX < 275 && mouseEvent.offsetY > 430 && mouseEvent.offsetY < 495)) {
             STARTBEAM = true;
             GAMESTATE = 30;
         }
@@ -1010,6 +1030,8 @@ function menuScreen(mouseEvent) {
             ctx.fillText("Hit A Wall!", 170, 200);
         } else if (failReason == 2) {
             ctx.fillText("Alarm tripped!", 135, 200);
+        } else if (failReason == 3) {
+            ctx.fillText("Beam Collided!", 135, 200);
         }
 
         ctx.font = "20px Arial";
@@ -1047,6 +1069,10 @@ function resetBoard() {
         beamStore[bstore][3] = 0;
     }
 
+    for (bpClear = 0; bpClear < nodeCount; bpClear++) {
+        beamPath[bpClear] = 0;
+    }
+
     //restart vars
     STARTBEAM = false;
     FAILSTATE = false;
@@ -1056,6 +1082,7 @@ function resetBoard() {
     PREVNODE = 0; //the node we just came from
     xlineStartPos = 0; //updated x position to start the beam
     ylineStartPos = 0; //updated y position to start the beam
+    beamStoreSpot = 0;
 
     // set time depending on which game mode we're in
     if (GAMEMODE == 0) {
@@ -1065,6 +1092,9 @@ function resetBoard() {
         timer = 5;
         GAMESTATE = 30;
     }
+
+    //stop our timer
+    clearInterval(myChargeTimer);
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -1088,8 +1118,9 @@ function timerDraw() {
 function nodeChargeTimer(cState) {
     var chargeTimer = 3;
     nodes[cState][98] = 3;
-    setInterval(function() {
+    myChargeTimer = setInterval(function() {
         chargeTimer--;
+
         if (chargeTimer > 3) {
             nodes[cState][98] = 3;
         } else if (chargeTimer <= 2 && chargeTimer > 0) {
@@ -1105,7 +1136,7 @@ function nodeChargeTimer(cState) {
 }
 
 ///////////////////////////////////////////////////////////////////////////
-//FUNCTION: drawBeam()
+//FUNCTION: drawBeamHyper()
 //
 //PURPOSE: When the player starts the hack, run the beam through their 
 //         puzzle to see if their solution is correct
@@ -1130,6 +1161,7 @@ function drawBeamHyper() {
             PREVNODE = NODENUM;
             NODENUM = NEXTNODE;
             BEAMCOUNT = 9; //pause everything while we count
+            beamPath[0] = 12;
 
             //start storing the beam to draw all the time
             beamStore[0][0] = startPos[0];
@@ -1290,12 +1322,22 @@ function drawBeamHyper() {
             //set the node we're about to be on 
             PREVNODE = NODENUM;
             NODENUM = NEXTNODE;
+            beamPath[beamStoreSpot] = NODENUM;
+
+            //have we been here before?
+            for (var bc = 0; bc < beamStoreSpot; bc++) {
+                if (beamPath[bc] == NODENUM) {
+                    FAILSTATE = true;
+                    GAMESTATE = 50;
+                    failReason = 3; //beam collision
+                }
+            }
 
             //reset the beamWidth
             beamWidth = 1;
             beamStoreSpot++;
 
-
+            // if we're a circle node, charge up
             if (nodes[NODENUM][0] == 2) {
                 //start the timer for the next one!
                 BEAMCOUNT = 9; //pause everything while we count
@@ -1360,6 +1402,12 @@ function endStateCheck() {
             FAILSTATE = true;
             GAMESTATE = 50;
             failReason = 1; //hit a wall
+        }
+
+        if (PREVNODE == NEXTNODE) {
+            FAILSTATE = true;
+            GAMESTATE = 50;
+            failReason = 3; //hit a wall
         }
     }
 }
