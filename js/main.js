@@ -792,7 +792,6 @@ function update(mouseEvent) {
     } else if (GAMESTATE == 40) { // SUCCESS STATE
         if (mouseEvent.offsetX > 135 && mouseEvent.offsetX < 240 && mouseEvent.offsetY > 370 && mouseEvent.offsetY < 400) {
             resetBoard();
-            GAMESTATE = 20;
         } else if (mouseEvent.offsetX > 260 && mouseEvent.offsetX < 360 && mouseEvent.offsetY > 370 && mouseEvent.offsetY < 400) {
             //alert("RIGHT BUTTON");
             close();
