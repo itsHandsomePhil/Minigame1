@@ -16,7 +16,7 @@ var failReason = 0;
 
 var GAMEMODE = 0;
 //0 = timed
-//1 = hyper
+//1 = Chase
 
 // the start and ending images
 var startIMG = new Image();
@@ -141,7 +141,7 @@ function draw() {
             if (STARTBEAM) {
                 drawBeamTimed();
             }
-        } else if (GAMEMODE == 1) { //HYPER MODE
+        } else if (GAMEMODE == 1) { //CHASE MODE
             //draw the gameboard
             if (STARTBEAM) {
                 drawBeamHyper();
@@ -810,7 +810,7 @@ function menuScreen(mouseEvent) {
         //start game button text
         ctx.font = "15px Arial";
         ctx.fillText("Timed Mode", 151, 392);
-        ctx.fillText("Hyper Mode", 273, 392);
+        ctx.fillText("Chase Mode", 273, 392);
 
         //HOW IT WORKS
 
@@ -821,7 +821,7 @@ function menuScreen(mouseEvent) {
         ctx.fillText("the beam's path and run the hack.", 127, 225);
 
         ctx.font = "12px Arial";
-        ctx.fillText("Hyper Mode:", 127, 275);
+        ctx.fillText("Chase Mode:", 127, 275);
         ctx.fillText("The Beam fires when the game starts. Player ", 127, 290);
         ctx.fillText("then has until the node fills to change its", 127, 305);
         ctx.fillText("orientation before the beam fires again.", 127, 320);
