@@ -225,7 +225,12 @@ function drawNodes() {
             if (nodes[nodeDraw][1] == 0) {
 
                 if (nodes[nodeDraw][99] == false || nodes[nodeDraw] == 0) {
-                    ctx.drawImage(imgStore[image], xPos, yPos);
+                    if (nodes[nodeDraw][98] == 5) {
+                        ctx.drawImage(imgStore[5], xPos, yPos);
+                    } else {
+                        ctx.drawImage(imgStore[image], xPos, yPos);
+                    }
+
                 } else if (nodes[nodeDraw][99] == true) {
                     if (nodes[nodeDraw][98] == 0) {
                         ctx.drawImage(imgStore[7], xPos, yPos);
@@ -244,7 +249,15 @@ function drawNodes() {
                 ctx.rotate(90 * Math.PI / 180);
 
                 if (nodes[nodeDraw][99] == false || nodes[nodeDraw] == 0) {
-                    ctx.drawImage(imgStore[image], 0, 0);
+
+                    if (nodes[nodeDraw][99] == false || nodes[nodeDraw] == 0) {
+                        if (nodes[nodeDraw][98] == 5) {
+                            ctx.drawImage(imgStore[5], 0, 0);
+                        } else {
+                            ctx.drawImage(imgStore[image], 0, 0);
+                        }
+                    }
+
                 } else if (nodes[nodeDraw][99] == true) {
                     if (nodes[nodeDraw][98] == 3) {
                         ctx.drawImage(imgStore[3], 0, 0);
@@ -264,7 +277,13 @@ function drawNodes() {
                 ctx.rotate(180 * Math.PI / 180);
 
                 if (nodes[nodeDraw][99] == false || nodes[nodeDraw] == 0) {
-                    ctx.drawImage(imgStore[image], 0, 0);
+                    if (nodes[nodeDraw][99] == false || nodes[nodeDraw] == 0) {
+                        if (nodes[nodeDraw][98] == 5) {
+                            ctx.drawImage(imgStore[5], 0, 0);
+                        } else {
+                            ctx.drawImage(imgStore[image], 0, 0);
+                        }
+                    }
                 } else if (nodes[nodeDraw][99] == true) {
                     if (nodes[nodeDraw][98] == 3) {
                         ctx.drawImage(imgStore[3], 0, 0);
@@ -284,7 +303,13 @@ function drawNodes() {
                 ctx.rotate(270 * Math.PI / 180);
 
                 if (nodes[nodeDraw][99] == false || nodes[nodeDraw] == 0) {
-                    ctx.drawImage(imgStore[image], 0, 0);
+                    if (nodes[nodeDraw][99] == false || nodes[nodeDraw] == 0) {
+                        if (nodes[nodeDraw][98] == 5) {
+                            ctx.drawImage(imgStore[5], 0, 0);
+                        } else {
+                            ctx.drawImage(imgStore[image], 0, 0);
+                        }
+                    }
                 } else if (nodes[nodeDraw][99] == true) {
                     if (nodes[nodeDraw][98] == 0) {
                         ctx.drawImage(imgStore[7], 0, 0);
