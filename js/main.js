@@ -66,6 +66,7 @@ for (var n = 0; n < nodeCount; n++) {
     nodes[n][1] = puzzle[n][1];
     nodes[n][98] = 0; //chargeState
     nodes[n][99] = false; //active node
+    nodes[n][100] = false; //highlight node
 }
 
 // position for the start and end button
@@ -99,7 +100,7 @@ for (bstore = 0; bstore < 100; bstore++) {
 }
 
 var imgStore = [];
-var imgCount = 8;
+var imgCount = 9;
 
 for (var i = 0; i < imgCount; i++) {
     imgStore[i] = new Image();
@@ -120,6 +121,8 @@ for (var i = 0; i < imgCount; i++) {
         imgStore[i].src = "img/Node/node_1_Alarm.png";
     } else if (i == 7) {
         imgStore[i].src = "img/Node/node_2_Circle_On.png";
+    } else if (i == 8) {
+        imgStore[i].src = "img/Node/node_6_Highlight.png";
     }
 }
 
@@ -164,8 +167,8 @@ function draw() {
     }
 
     //setup the listeners
-    //gameCanvas.addEventListener("mouseup", update);
     gameCanvas.addEventListener("mouseup", update);
+    gameCanvas.addEventListener("mousemove", highlightNode);
 
     //regulate our draw calls
     requestAnimationFrame(draw);
@@ -243,6 +246,11 @@ function drawNodes() {
                     }
                 }
 
+                //are we highlighted?
+                if (nodes[nodeDraw][100] == true && image == 2) {
+                    ctx.drawImage(imgStore[8], xPos, yPos);
+                }
+
             } else if (nodes[nodeDraw][1] == 1) {
                 ctx.save();
                 ctx.translate(xPos + 50, yPos);
@@ -268,6 +276,11 @@ function drawNodes() {
                     } else {
                         ctx.drawImage(imgStore[7], 0, 0);
                     }
+                }
+
+                //are we highlighted?
+                if (nodes[nodeDraw][100] == true && image == 2) {
+                    ctx.drawImage(imgStore[8], 0, 0);
                 }
 
                 ctx.restore();
@@ -296,6 +309,11 @@ function drawNodes() {
                     }
                 }
 
+                //are we highlighted?
+                if (nodes[nodeDraw][100] == true && image == 2) {
+                    ctx.drawImage(imgStore[8], 0, 0);
+                }
+
                 ctx.restore();
             } else if (nodes[nodeDraw][1] == 3) {
                 ctx.save();
@@ -320,6 +338,11 @@ function drawNodes() {
                     } else if (nodes[nodeDraw][98] == 5) {
                         ctx.drawImage(imgStore[5], 0, 0);
                     }
+                }
+
+                //are we highlighted?
+                if (nodes[nodeDraw][100] == true && image == 2) {
+                    ctx.drawImage(imgStore[8], 0, 0);
                 }
 
                 ctx.restore();
@@ -657,7 +680,7 @@ function update(mouseEvent) {
         // ROW 1
         if ((GAMESTATE == 20 && GAMEMODE == 0) || GAMEMODE == 1) {
             if (mouseEvent.offsetX > 75 && mouseEvent.offsetX < 125 && mouseEvent.offsetY > 70 && mouseEvent.offsetY < 125) {
-                if (nodes[0][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) { // && nodes[0][99] == true
+                if (nodes[0][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[0][98] != 5))) { // && nodes[0][99] == true
                     if (nodes[0][1] == 3) {
                         nodes[0][1] = 0
                     } else {
@@ -665,7 +688,7 @@ function update(mouseEvent) {
                     }
                 }
             } else if (mouseEvent.offsetX > 175 && mouseEvent.offsetX < 225 && mouseEvent.offsetY > 70 && mouseEvent.offsetY < 125) {
-                if (nodes[1][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
+                if (nodes[1][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[1][98] != 5))) {
                     if (nodes[1][1] == 3) {
                         nodes[1][1] = 0
                     } else {
@@ -673,7 +696,7 @@ function update(mouseEvent) {
                     }
                 }
             } else if (mouseEvent.offsetX > 275 && mouseEvent.offsetX < 325 && mouseEvent.offsetY > 70 && mouseEvent.offsetY < 125) {
-                if (nodes[2][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
+                if (nodes[2][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[2][98] != 5))) {
                     if (nodes[2][1] == 3) {
                         nodes[2][1] = 0
                     } else {
@@ -681,7 +704,7 @@ function update(mouseEvent) {
                     }
                 }
             } else if (mouseEvent.offsetX > 375 && mouseEvent.offsetX < 425 && mouseEvent.offsetY > 70 && mouseEvent.offsetY < 125) {
-                if (nodes[3][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
+                if (nodes[3][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[3][98] != 5))) {
                     if (nodes[3][1] == 3) {
                         nodes[3][1] = 0
                     } else {
@@ -690,7 +713,7 @@ function update(mouseEvent) {
                 }
                 //ROW 2
             } else if (mouseEvent.offsetX > 75 && mouseEvent.offsetX < 125 && mouseEvent.offsetY > 170 && mouseEvent.offsetY < 225) {
-                if (nodes[4][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
+                if (nodes[4][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[4][98] != 5))) {
                     if (nodes[4][1] == 3) {
                         nodes[4][1] = 0
                     } else {
@@ -698,7 +721,7 @@ function update(mouseEvent) {
                     }
                 }
             } else if (mouseEvent.offsetX > 175 && mouseEvent.offsetX < 225 && mouseEvent.offsetY > 170 && mouseEvent.offsetY < 225) {
-                if (nodes[5][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
+                if (nodes[5][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[5][98] != 5))) {
                     if (nodes[5][1] == 3) {
                         nodes[5][1] = 0
                     } else {
@@ -706,7 +729,7 @@ function update(mouseEvent) {
                     }
                 }
             } else if (mouseEvent.offsetX > 275 && mouseEvent.offsetX < 325 && mouseEvent.offsetY > 170 && mouseEvent.offsetY < 225) {
-                if (nodes[6][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
+                if (nodes[6][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[6][98] != 5))) {
                     if (nodes[6][1] == 3) {
                         nodes[6][1] = 0
                     } else {
@@ -714,7 +737,7 @@ function update(mouseEvent) {
                     }
                 }
             } else if (mouseEvent.offsetX > 375 && mouseEvent.offsetX < 425 && mouseEvent.offsetY > 170 && mouseEvent.offsetY < 225) {
-                if (nodes[7][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
+                if (nodes[7][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[7][98] != 5))) {
                     if (nodes[7][1] == 3) {
                         nodes[7][1] = 0
                     } else {
@@ -723,7 +746,7 @@ function update(mouseEvent) {
                 }
                 //ROW 3
             } else if (mouseEvent.offsetX > 75 && mouseEvent.offsetX < 125 && mouseEvent.offsetY > 270 && mouseEvent.offsetY < 325) {
-                if (nodes[8][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
+                if (nodes[8][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[8][98] != 5))) {
                     if (nodes[8][1] == 3) {
                         nodes[8][1] = 0
                     } else {
@@ -731,7 +754,7 @@ function update(mouseEvent) {
                     }
                 }
             } else if (mouseEvent.offsetX > 175 && mouseEvent.offsetX < 225 && mouseEvent.offsetY > 270 && mouseEvent.offsetY < 325) {
-                if (nodes[9][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
+                if (nodes[9][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[9][98] != 5))) {
                     if (nodes[9][1] == 3) {
                         nodes[9][1] = 0
                     } else {
@@ -739,7 +762,7 @@ function update(mouseEvent) {
                     }
                 }
             } else if (mouseEvent.offsetX > 275 && mouseEvent.offsetX < 325 && mouseEvent.offsetY > 270 && mouseEvent.offsetY < 325) {
-                if (nodes[10][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
+                if (nodes[10][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[10][98] != 5))) {
                     if (nodes[10][1] == 3) {
                         nodes[10][1] = 0
                     } else {
@@ -747,7 +770,7 @@ function update(mouseEvent) {
                     }
                 }
             } else if (mouseEvent.offsetX > 375 && mouseEvent.offsetX < 425 && mouseEvent.offsetY > 270 && mouseEvent.offsetY < 325) {
-                if (nodes[11][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
+                if (nodes[11][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[11][98] != 5))) {
                     if (nodes[11][1] == 3) {
                         nodes[11][1] = 0
                     } else {
@@ -756,7 +779,7 @@ function update(mouseEvent) {
                 }
                 //ROW 4
             } else if (mouseEvent.offsetX > 75 && mouseEvent.offsetX < 125 && mouseEvent.offsetY > 370 && mouseEvent.offsetY < 425) {
-                if (nodes[12][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
+                if (nodes[12][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[12][98] != 5))) {
                     if (nodes[12][1] == 3) {
                         nodes[12][1] = 0
                     } else {
@@ -764,7 +787,7 @@ function update(mouseEvent) {
                     }
                 }
             } else if (mouseEvent.offsetX > 175 && mouseEvent.offsetX < 225 && mouseEvent.offsetY > 370 && mouseEvent.offsetY < 425) {
-                if (nodes[13][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
+                if (nodes[13][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[13][98] != 5))) {
                     if (nodes[13][1] == 3) {
                         nodes[13][1] = 0
                     } else {
@@ -772,7 +795,7 @@ function update(mouseEvent) {
                     }
                 }
             } else if (mouseEvent.offsetX > 275 && mouseEvent.offsetX < 325 && mouseEvent.offsetY > 370 && mouseEvent.offsetY < 425) {
-                if (nodes[14][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
+                if (nodes[14][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[14][98] != 5))) {
                     if (nodes[14][1] == 3) {
                         nodes[14][1] = 0
                     } else {
@@ -780,7 +803,7 @@ function update(mouseEvent) {
                     }
                 }
             } else if (mouseEvent.offsetX > 375 && mouseEvent.offsetX < 425 && mouseEvent.offsetY > 370 && mouseEvent.offsetY < 425) {
-                if (nodes[15][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1))) {
+                if (nodes[15][0] == 2 && (GAMEMODE == 0 || (GAMEMODE == 1 && nodes[15][98] != 5))) {
                     if (nodes[15][1] == 3) {
                         nodes[15][1] = 0
                     } else {
@@ -937,8 +960,9 @@ function menuScreen(mouseEvent) {
 
             //CHARGED SHOOTER TUTORIAL
             ctx.font = "10px Arial";
-            ctx.fillText("- Node is charged and will fire when all", 170, 180);
-            ctx.fillText("  three beams are lit up.", 170, 190);
+            ctx.fillText("- A full node cannot be rotated.", 170, 175);
+            ctx.fillText("- Node is charged and will fire when all", 170, 185);
+            ctx.fillText("  three beams are lit up.", 170, 195);
 
             //PASSTHROUGH TUTORIAL
             ctx.font = "10px Arial";
@@ -1011,6 +1035,7 @@ function resetBoard() {
         nodes[n][0] = puzzle[n][0];
         nodes[n][1] = puzzle[n][1];
         nodes[n][99] = false;
+        nodes[n][100] = false;
     }
 
     //erase the old beam
@@ -1074,6 +1099,7 @@ function nodeChargeTimer(cState) {
             STARTBEAM = true;
             BEAMCOUNT = 1;
             nodes[cState][99] = false;
+            nodes[cState][100] = false; //turn off the highlight
         }
     }, 1000);
 }
@@ -1335,5 +1361,19 @@ function endStateCheck() {
             GAMESTATE = 50;
             failReason = 1; //hit a wall
         }
+    }
+}
+
+function highlightNode(mouseEvent) {
+    //go through all of the nodes and see if the mouseevent is in them
+    for (var nc = 0; nc < nodeCount; nc++) {
+        if (mouseEvent.offsetX > nodes[nc][2] - 25 && mouseEvent.offsetX < nodes[nc][2] + 25 && mouseEvent.offsetY > nodes[nc][3] - 25 && mouseEvent.offsetY < nodes[nc][3] + 25) {
+            if ((GAMEMODE == 1 && nodes[nc][98] != 5) || (GAMEMODE == 0 && GAMESTATE == 20)) {
+                nodes[nc][100] = true; //turn on the highlight
+            }
+        } else {
+            nodes[nc][100] = false; //turn off the highlight
+        }
+
     }
 }
