@@ -847,8 +847,8 @@ function menuScreen(mouseEvent) {
         ctx.font = "12px Arial";
         ctx.fillText("Chase Mode:", 127, 275);
         ctx.fillText("The Beam fires when the game starts. Player ", 127, 290);
-        ctx.fillText("then has until the node fills to change its", 127, 305);
-        ctx.fillText("orientation before the beam fires again.", 127, 320);
+        ctx.fillText("must arrange the nodes before the beam hits", 127, 305);
+        ctx.fillText("them to lead the beam to the finish.", 127, 320);
 
     } else if (GAMESTATE == 10) { // TUTORIAL MENU
 
