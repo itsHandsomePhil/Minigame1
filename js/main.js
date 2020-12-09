@@ -1041,13 +1041,12 @@ function nodeChargeTimer(cState) {
     var chargeTimer = 6;
     setInterval(function() {
         chargeTimer--;
-        if (chargeTimer > 4) {
+        if (chargeTimer > 3) {
             nodes[cState][98] = 3;
-        } else if (chargeTimer == 3 || chargeTimer == 4) {
+        } else if (chargeTimer <= 2 || chargeTimer > 0) {
             nodes[cState][98] = 4;
-        } else if (chargeTimer == 2 || chargeTimer == 1) {
-            nodes[cState][98] = 5;
         } else if (chargeTimer == 0) {
+            nodes[cState][98] = 5;
             STARTBEAM = true;
             BEAMCOUNT = 1;
             nodes[cState][99] = false;
