@@ -19,6 +19,9 @@ var GAMEMODE = 0;
 //0 = timed
 //1 = Chase
 
+//our database of puzzles
+
+
 // the start and ending images
 var startIMG = new Image();
 startIMG.src = "img/start.png"
@@ -41,38 +44,62 @@ var nodeCount = 16;
 var nodeVarCount = 8;
 var colCount = 4;
 var rowCount = 4;
-var puzzle = [
-    [2, 3],
-    [2, 2],
-    [0, 1],
-    [2, 2],
-    [1, 0],
-    [6, 0],
-    [2, 0],
-    [6, 0],
+
+//puzzle 0
+var puzzleLoad = [
+    [2, 1],
+    [2, 1],
+    [2, 1],
     [2, 1],
     [2, 0],
-    [0, 3],
-    [2, 3],
-    [2, 1],
-    [2, 1],
+    [2, 0],
+    [2, 0],
+    [2, 0],
+    [2, 0],
+    [2, 0],
+    [2, 0],
+    [2, 0],
     [2, 2],
-    [0, 3]
+    [2, 1],
+    [2, 1],
+    [2, 0],
+    [0, 375], //start node - 16
+    [450, 75] //end node - 17
 ];
 
-// setup the nodes
-for (var n = 0; n < nodeCount; n++) {
+//puzzle 0
+var puzzle0 = [
+    [2, 1], // NODE 00 // ROW 1
+    [2, 1], // NODE 01
+    [2, 1], // NODE 02
+    [2, 1], // NODE 03
+    [2, 0], // NODE 04 // ROW 2
+    [2, 0], // NODE 05
+    [2, 0], // NODE 06
+    [2, 0], // NODE 07
+    [2, 0], // NODE 08 // ROW 3
+    [2, 0], // NODE 09
+    [2, 0], // NODE 10
+    [2, 0], // NODE 11
+    [2, 2], // NODE 12 // ROW 4
+    [2, 1], // NODE 13
+    [2, 1], // NODE 14
+    [2, 0], // NODE 15
+    [0, 375], //start node - 16
+    [450, 75] //end node - 17
+];
+
+//puzzleLoad = puzzle0;
+
+// setup the nodes, add 2 for start and end
+for (var n = 0; n < nodeCount + 2; n++) {
     nodes[n] = [];
-    nodes[n][0] = puzzle[n][0];
-    nodes[n][1] = puzzle[n][1];
+    nodes[n][0] = puzzleLoad[n][0];
+    nodes[n][1] = puzzleLoad[n][1];
     nodes[n][98] = 0; //chargeState
     nodes[n][99] = false; //active node
     nodes[n][100] = false; //highlight node
 }
-
-// position for the start and end button
-var startPos = [0, 375];
-var endPos = [450, 75];
 
 // BEAM VARIABLES
 var beamWidth = 55; //the starting width for the beam
@@ -139,12 +166,23 @@ var myChargeTimer;
 function draw() {
     gameCanvas = document.getElementById("gameCanvas");
     gameCanvas.getContext("2d").clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+    var ctx = gameCanvas.getContext("2d");
+    var puzzNum = localStorage.puzzleNumber;
+    puzzNum++;
 
     if (GAMESTATE == 0) {
+        //alert(localStorage.puzzleNumber);
+        localStorage.puzzleNumber = 0; //reset the puzzle number on new site launch
         GAMESTATE = 5;
     } else if (GAMESTATE == 5 || GAMESTATE == 10) {
         menuScreen();
     } else if (GAMESTATE == 20 || GAMESTATE == 30) { //INPUT STATE
+
+        //display puzzle number
+        ctx.font = "15px Arial";
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillText("Puzzle Number: " + puzzNum, 25, 18);
+        ctx.fillStyle = "#000000";
 
         if (GAMEMODE == 0) { //TIMED MODE
             //draw the gameboard
@@ -190,8 +228,8 @@ function draw() {
 function drawGoals() {
     var ctx = gameCanvas.getContext("2d");
 
-    ctx.drawImage(startIMG, startPos[0], startPos[1]);
-    ctx.drawImage(endIMG, endPos[0], endPos[1]);
+    ctx.drawImage(startIMG, nodes[16][0], nodes[16][1]);
+    ctx.drawImage(endIMG, nodes[17][0], nodes[17][1]);
 
     if (GAMEMODE == 0 && GAMESTATE == 20 || GAMEMODE == 1 && timer >= 0) {
         if (timer >= 10) {
@@ -229,9 +267,9 @@ function drawNodes() {
 
         var image = nodes[nodeDraw][0];
 
-        if (image == 1 || image == 6) {
+        if (image == 6) {
             ctx.drawImage(imgStore[image], xPos, yPos);
-        } else if (image == 0 || image == 2) {
+        } else if (image == 0 || image == 1 || image == 2) {
             if (nodes[nodeDraw][1] == 0) {
 
                 if (nodes[nodeDraw][99] == false || nodes[nodeDraw] == 0) {
@@ -393,49 +431,29 @@ function drawBeamTimed() {
         GAMESTATE = 40;
     }
 
-    //////////////////
-    // DID WE LOSE? //
-    //////////////////
-
-    if (GAMESTATE == 30 && BEAMCOUNT == 1) {
-        // went too high!
-        if (BEAMDIR == 0 && (NODENUM == 0 || NODENUM == 1 || NODENUM == 2 || NODENUM == 3) && beamWidth < -70) {
-            //you failed
-            FAILSTATE = true;
-            GAMESTATE = 50;
-            failReason = 1; //hit a wall
-            //too far right
-        } else if (BEAMDIR == 1 && (NODENUM == 7 || NODENUM == 11 || NODENUM == 15) && beamWidth > 70) {
-            //you failed
-            FAILSTATE = true;
-            GAMESTATE = 50;
-            failReason = 1; //hit a wall
-            //too far down
-        } else if (BEAMDIR == 2 && (NODENUM == 12 || NODENUM == 13 || NODENUM == 14 || NODENUM == 15) && beamWidth > 70) {
-            //you failed
-            FAILSTATE = true;
-            GAMESTATE = 50;
-            failReason = 1; //hit a wall
-            //too far left
-        } else if (BEAMDIR == 3 && (NODENUM == 0 || NODENUM == 4 || NODENUM == 8 || NODENUM == 12) && beamWidth < -70) {
-            //you failed
-            FAILSTATE = true;
-            GAMESTATE = 50;
-            failReason = 1; //hit a wall
-        }
-    }
     ////////////////
     // FIRST NODE //
     //keep the beam moving
     if (BEAMCOUNT == 0) {
         if (beamWidth < 100) {
-            NODENUM = 0;
-            NEXTNODE = 12;
-            drawLine(startPos[0], startPos[1] + 27, beamWidth, startPos[1] + 27);
+            NODENUM = 99; //start NODE
+
+            // which is our next beam node?
+            if (nodes[16][1] == 75) {
+                NEXTNODE = 0;
+            } else if (nodes[16][1] == 175) {
+                NEXTNODE = 4;
+            } else if (nodes[16][1] == 275) {
+                NEXTNODE = 8;
+            } else if (nodes[16][1] == 375) {
+                NEXTNODE = 12;
+            } else { alert("FAIL!") }
+
+            drawLine(nodes[16][0], nodes[16][1] + 27, beamWidth, nodes[16][1] + 27);
             beamWidth += beamSpeed;
         } else {
             xlineStartPos = beamWidth;
-            ylineStartPos = startPos[1] + 26;
+            ylineStartPos = nodes[16][1] + 26;
             beamWidth = 1;
             PREVNODE = NODENUM;
             NODENUM = NEXTNODE;
@@ -444,8 +462,8 @@ function drawBeamTimed() {
             beamPath[beamStoreSpot] = NODENUM;
 
             //start storing the beam to draw all the time
-            beamStore[0][0] = startPos[0];
-            beamStore[0][1] = startPos[1] + 26;
+            beamStore[0][0] = nodes[16][0];
+            beamStore[0][1] = nodes[16][1] + 26;
             beamStore[0][2] = nodes[NODENUM][2];
             beamStore[0][3] = nodes[NODENUM][3] + 1;
 
@@ -491,7 +509,7 @@ function drawBeamTimed() {
                     failReason = 1; //hit a wall
                 }
             } else if (nodes[NODENUM][1] == 2) { //7 SQUARE
-                if (PREVNODE == NODENUM - 1) {
+                if ((PREVNODE == NODENUM - 1 && PREVNODE != 99) || PREVNODE == 99) {
                     BEAMPOSITIVE = true;
                     BEAMDIR = 2; //beam shoots down
                 } else if (PREVNODE == NODENUM + 4) {
@@ -505,7 +523,7 @@ function drawBeamTimed() {
                 }
 
             } else if (nodes[NODENUM][1] == 3) { //U SQUARE
-                if (PREVNODE == NODENUM - 1) {
+                if ((PREVNODE == NODENUM - 1 && PREVNODE != 99) || PREVNODE == 99) {
                     BEAMPOSITIVE = false;
                     BEAMDIR = 0; //beam shoots up
                 } else if (PREVNODE == NODENUM - 4) {
@@ -519,18 +537,36 @@ function drawBeamTimed() {
                 }
             }
         } else if (nodes[NODENUM][0] == 1) { //ITS Pass Node
-            if (PREVNODE == NODENUM - 4) {
-                BEAMPOSITIVE = true;
-                BEAMDIR = 2;
-            } else if (PREVNODE == NODENUM + 4) {
-                BEAMPOSITIVE = false;
-                BEAMDIR = 0;
-            } else {
-                // we failed, oh no!
-                FAILSTATE = true;
-                GAMESTATE = 50;
-                failReason = 1; //hit a wall
+
+            //is it left/right or up/down?
+            if (nodes[NODENUM][1] == 0) {
+                if (PREVNODE == NODENUM - 4) {
+                    BEAMPOSITIVE = true;
+                    BEAMDIR = 2;
+                } else if (PREVNODE == NODENUM + 4) {
+                    BEAMPOSITIVE = false;
+                    BEAMDIR = 0;
+                } else {
+                    // we failed, oh no!
+                    FAILSTATE = true;
+                    GAMESTATE = 50;
+                    failReason = 1; //hit a wall
+                }
+            } else if (nodes[NODENUM][1] == 1) {
+                if (PREVNODE == NODENUM - 1) {
+                    BEAMPOSITIVE = true;
+                    BEAMDIR = 1;
+                } else if (PREVNODE == NODENUM + 1) {
+                    BEAMPOSITIVE = false;
+                    BEAMDIR = 3;
+                } else {
+                    // we failed, oh no!
+                    FAILSTATE = true;
+                    GAMESTATE = 50;
+                    failReason = 1; //hit a wall
+                }
             }
+
         } else if (nodes[NODENUM][0] == 2) { //ITS A CIRCLE NODE
 
             //is the beam heading in a positive or negative direction?
@@ -834,7 +870,15 @@ function update(mouseEvent) {
         }
     } else if (GAMESTATE == 40) { // SUCCESS STATE
         if (mouseEvent.offsetX > 135 && mouseEvent.offsetX < 240 && mouseEvent.offsetY > 370 && mouseEvent.offsetY < 400) {
-            resetBoard();
+
+            if (localStorage.puzzleNumber < 10) {
+                //NEXT PUZZLE
+                nextPuzzle();
+            } else if (localStorage.puzzleNumber == 10) {
+                localStorage.puzzleNumber = 0;
+                puzzleLoad = puzzle0;
+                resetBoard();
+            }
         } else if (mouseEvent.offsetX > 260 && mouseEvent.offsetX < 360 && mouseEvent.offsetY > 370 && mouseEvent.offsetY < 400) {
             //alert("RIGHT BUTTON");
             close();
@@ -1011,15 +1055,29 @@ function menuScreen(mouseEvent) {
 
 
     } else if (GAMESTATE == 40) { //SUCCESS SCREEN
-        ctx.font = "30px Arial";
-        ctx.fillText("A Winner Is You!", 137, 200);
-        ctx.font = "20px Arial";
-        ctx.fillText("Play again?", 200, 240);
 
-        //retry game button text
-        ctx.font = "15px Arial";
-        ctx.fillText("Retry Game", 150, 392);
-        ctx.fillText("Quit Game", 275, 392);
+        if (localStorage.puzzleNumber < 10) {
+            ctx.font = "30px Arial";
+            ctx.fillText("A Winner Is You!", 137, 200);
+            ctx.font = "20px Arial";
+            ctx.fillText("Play again?", 200, 240);
+
+            //next puzzle button text
+            ctx.font = "15px Arial";
+            ctx.fillText("Next Puzzle", 150, 392);
+            ctx.fillText("Quit Game", 275, 392);
+        } else if (localStorage.puzzleNumber == 10) {
+            ctx.font = "30px Arial";
+            ctx.fillText("You beat them all!", 135, 200);
+            ctx.font = "20px Arial";
+            ctx.fillText("Start over?", 200, 240);
+
+            //restart game button text
+            ctx.font = "13px Arial";
+            ctx.fillText("Restart Game?", 142, 392);
+            ctx.font = "15px Arial";
+            ctx.fillText("Quit Game", 275, 392);
+        }
     } else if (GAMESTATE == 50) { //PLAYER HAS FAILED!
 
         ctx.font = "35px Arial";
@@ -1054,8 +1112,67 @@ function resetBoard() {
     //reset the nodes to their starting points
     for (var n = 0; n < nodeCount; n++) {
         nodes[n] = [];
-        nodes[n][0] = puzzle[n][0];
-        nodes[n][1] = puzzle[n][1];
+        nodes[n][0] = puzzleLoad[n][0];
+        nodes[n][1] = puzzleLoad[n][1];
+        nodes[n][99] = false;
+        nodes[n][100] = false;
+    }
+
+    //erase the old beam
+    for (bstore = 0; bstore < 100; bstore++) {
+        beamStore[bstore] = [];
+        beamStore[bstore][0] = 0;
+        beamStore[bstore][1] = 0;
+        beamStore[bstore][2] = 0;
+        beamStore[bstore][3] = 0;
+    }
+
+    for (bpClear = 0; bpClear < nodeCount; bpClear++) {
+        beamPath[bpClear] = 0;
+    }
+
+    //restart vars
+    STARTBEAM = false;
+    FAILSTATE = false;
+    BEAMCOUNT = 0; //the segment of the beam we're testing
+    NODENUM = 0; //our current active node
+    NEXTNODE = 0; //the projected next node based on facing
+    PREVNODE = 0; //the node we just came from
+    xlineStartPos = 0; //updated x position to start the beam
+    ylineStartPos = 0; //updated y position to start the beam
+    beamStoreSpot = 0;
+
+    // set time depending on which game mode we're in
+    if (GAMEMODE == 0) {
+        timer = 30;
+        GAMESTATE = 20;
+    } else if (GAMEMODE == 1) {
+        timer = 5;
+        GAMESTATE = 30;
+    }
+
+    //stop our timer
+    clearInterval(myChargeTimer);
+}
+
+///////////////////////////////////////////////////////
+// FUNCTION: nextPuzzle
+//
+// PURPOSE: Load Up The Next Puzzle!
+///////////////////////////////////////////////////////
+function nextPuzzle() {
+
+    // increment our Puzzle Number
+    localStorage.puzzleNumber++;
+
+    //alert(localStorage.puzzleNumber);
+    puzzleLoad = eval("puzzle" + localStorage.puzzleNumber);
+
+    //reset the nodes to their starting points
+    for (var n = 0; n < nodeCount + 2; n++) {
+        nodes[n] = [];
+        nodes[n][0] = puzzleLoad[n][0];
+        nodes[n][1] = puzzleLoad[n][1];
         nodes[n][99] = false;
         nodes[n][100] = false;
     }
@@ -1150,13 +1267,24 @@ function drawBeamHyper() {
     //keep the beam moving
     if (BEAMCOUNT == 0) {
         if (beamWidth < 100) {
-            NODENUM = 0;
-            NEXTNODE = 12;
-            drawLine(startPos[0], startPos[1] + 27, beamWidth, startPos[1] + 27);
+            NODENUM = 99; // start node
+
+            // which is our next beam node?
+            if (nodes[16][1] == 75) {
+                NEXTNODE = 0;
+            } else if (nodes[16][1] == 175) {
+                NEXTNODE = 4;
+            } else if (nodes[16][1] == 275) {
+                NEXTNODE = 8;
+            } else if (nodes[16][1] == 375) {
+                NEXTNODE = 12;
+            }
+
+            drawLine(nodes[16][0], nodes[16][1] + 27, beamWidth, nodes[16][1] + 27);
             beamWidth += beamSpeed;
         } else {
             xlineStartPos = beamWidth;
-            ylineStartPos = startPos[1] + 26;
+            ylineStartPos = nodes[16][1] + 26;
             beamWidth = 1;
             PREVNODE = NODENUM;
             NODENUM = NEXTNODE;
@@ -1164,16 +1292,16 @@ function drawBeamHyper() {
             beamPath[0] = 12;
 
             //start storing the beam to draw all the time
-            beamStore[0][0] = startPos[0];
-            beamStore[0][1] = startPos[1] + 26;
+            beamStore[0][0] = nodes[16][0];
+            beamStore[0][1] = nodes[16][1] + 26;
             beamStore[0][2] = nodes[NODENUM][2];
             beamStore[0][3] = nodes[NODENUM][3] + 1;
 
             beamStoreSpot = 1;
-            nodes[12][99] = true;
+            nodes[NODENUM][99] = true;
 
             //start the timer for the next one!
-            nodeChargeTimer(12);
+            nodeChargeTimer(NODENUM);
         }
     } else if (BEAMCOUNT == 1) {
 
@@ -1215,7 +1343,7 @@ function drawBeamHyper() {
                     failReason = 1; //hit a wall
                 }
             } else if (nodes[NODENUM][1] == 2) { //7 SQUARE
-                if (PREVNODE == NODENUM - 1) {
+                if ((PREVNODE == NODENUM - 1 && PREVNODE != 99) || PREVNODE == 99) {
                     BEAMPOSITIVE = true;
                     BEAMDIR = 2; //beam shoots down
                 } else if (PREVNODE == NODENUM + 4) {
@@ -1229,7 +1357,7 @@ function drawBeamHyper() {
                 }
 
             } else if (nodes[NODENUM][1] == 3) { //U SQUARE
-                if (PREVNODE == NODENUM - 1) {
+                if ((PREVNODE == NODENUM - 1 && PREVNODE != 99) || PREVNODE == 99) {
                     BEAMPOSITIVE = false;
                     BEAMDIR = 0; //beam shoots up
                 } else if (PREVNODE == NODENUM - 4) {
@@ -1243,17 +1371,33 @@ function drawBeamHyper() {
                 }
             }
         } else if (nodes[NODENUM][0] == 1) { //ITS Pass Node
-            if (PREVNODE == NODENUM - 4) {
-                BEAMPOSITIVE = true;
-                BEAMDIR = 2;
-            } else if (PREVNODE == NODENUM + 4) {
-                BEAMPOSITIVE = false;
-                BEAMDIR = 0;
-            } else {
-                // we failed, oh no!
-                FAILSTATE = true;
-                GAMESTATE = 50;
-                failReason = 1; //hit a wall
+            //is it left/right or up/down?
+            if (nodes[NODENUM][1] == 0) {
+                if (PREVNODE == NODENUM - 4) {
+                    BEAMPOSITIVE = true;
+                    BEAMDIR = 2;
+                } else if (PREVNODE == NODENUM + 4) {
+                    BEAMPOSITIVE = false;
+                    BEAMDIR = 0;
+                } else {
+                    // we failed, oh no!
+                    FAILSTATE = true;
+                    GAMESTATE = 50;
+                    failReason = 1; //hit a wall
+                }
+            } else if (nodes[NODENUM][1] == 1) {
+                if (PREVNODE == NODENUM - 1) {
+                    BEAMPOSITIVE = true;
+                    BEAMDIR = 1;
+                } else if (PREVNODE == NODENUM + 1) {
+                    BEAMPOSITIVE = false;
+                    BEAMDIR = 3;
+                } else {
+                    // we failed, oh no!
+                    FAILSTATE = true;
+                    GAMESTATE = 50;
+                    failReason = 1; //hit a wall
+                }
             }
         } else if (nodes[NODENUM][0] == 2) { //ITS A CIRCLE NODE
 
@@ -1367,15 +1511,17 @@ function endStateCheck() {
     /////////////////
     // DID WE WIN? //
     /////////////////
-    if (NODENUM == 3 && BEAMDIR == 1 && beamWidth > 60) {
-        //alert("YOU WIN!");
-        //player won!
-        GAMESTATE = 40;
+    if (GAMESTATE == 30 && beamWidth > 60) {
+        if (nodes[17][1] == 75 && NODENUM == 3) {
+            GAMESTATE = 40;
+        } else if (nodes[17][1] == 175 && NODENUM == 7) {
+            GAMESTATE = 40;
+        } else if (nodes[17][1] == 275 && NODENUM == 11) {
+            GAMESTATE = 40;
+        } else if (nodes[17][1] == 375 && NODENUM == 15) {
+            GAMESTATE = 40;
+        }
     }
-
-    //////////////////
-    // DID WE LOSE? //
-    //////////////////
 
     if (GAMESTATE == 30 && BEAMCOUNT == 1) {
         // went too high!
@@ -1407,7 +1553,7 @@ function endStateCheck() {
         if (PREVNODE == NEXTNODE) {
             FAILSTATE = true;
             GAMESTATE = 50;
-            failReason = 3; //hit a wall
+            failReason = 3; //beam collision
         }
     }
 }
@@ -1425,3 +1571,232 @@ function highlightNode(mouseEvent) {
 
     }
 }
+
+//*************/
+//** PUZZLES **/
+//*************/
+
+/* TUTORIALS */
+
+//puzzle 1
+var puzzle1 = [
+    [6, 0], // NODE 00 // ROW 1
+    [6, 0], // NODE 01
+    [6, 0], // NODE 02
+    [2, 3], // NODE 03
+    [6, 0], // NODE 04 // ROW 2
+    [2, 3], // NODE 05
+    [2, 0], // NODE 06
+    [2, 2], // NODE 07
+    [6, 0], // NODE 08 // ROW 3
+    [2, 1], // NODE 09
+    [6, 0], // NODE 10
+    [6, 0], // NODE 11
+    [2, 0], // NODE 12 // ROW 4
+    [2, 2], // NODE 13
+    [6, 0], // NODE 14
+    [6, 0], // NODE 15
+    [0, 375], //start node - 16
+    [450, 75] //end node - 17
+];
+
+//puzzle 2
+var puzzle2 = [
+    [2, 1], // NODE 00 // ROW 1
+    [2, 0], // NODE 01
+    [6, 0], // NODE 02
+    [2, 3], // NODE 03
+    [6, 0], // NODE 04 // ROW 2
+    [2, 3], // NODE 05
+    [2, 0], // NODE 06
+    [2, 2], // NODE 07
+    [6, 0], // NODE 08 // ROW 3
+    [2, 1], // NODE 09
+    [6, 0], // NODE 10
+    [2, 0], // NODE 11
+    [2, 0], // NODE 12 // ROW 4
+    [2, 2], // NODE 13
+    [6, 0], // NODE 14
+    [6, 0], // NODE 15
+    [0, 75], //start node - 16
+    [450, 275] //end node - 17
+];
+
+//puzzle 3
+var puzzle3 = [
+    [2, 1], // NODE 00 // ROW 1
+    [0, 2], // NODE 01
+    [2, 0], // NODE 02
+    [2, 3], // NODE 03
+    [6, 0], // NODE 04 // ROW 2
+    [1, 0], // NODE 05
+    [2, 0], // NODE 06
+    [1, 1], // NODE 07
+    [6, 0], // NODE 08 // ROW 3
+    [2, 3], // NODE 09
+    [2, 0], // NODE 10
+    [2, 0], // NODE 11
+    [2, 0], // NODE 12 // ROW 4
+    [2, 2], // NODE 13
+    [0, 3], // NODE 14
+    [6, 0], // NODE 15
+    [0, 75], //start node - 16
+    [450, 175] //end node - 17
+];
+
+/* NORMAL PUZZLES */
+//puzzle 4
+var puzzle4 = [
+    [0, 1], // NODE 00 // ROW 1
+    [0, 2], // NODE 01
+    [2, 0], // NODE 02
+    [2, 0], // NODE 03
+    [2, 0], // NODE 04 // ROW 2
+    [6, 0], // NODE 05
+    [0, 3], // NODE 06
+    [1, 0], // NODE 07
+    [1, 0], // NODE 08 // ROW 3
+    [6, 1], // NODE 09
+    [2, 1], // NODE 10
+    [2, 3], // NODE 11
+    [2, 1], // NODE 12 // ROW 4
+    [1, 1], // NODE 13
+    [2, 2], // NODE 14
+    [0, 3], // NODE 15
+    [0, 375], //start node - 16
+    [450, 75] //end node - 17
+];
+
+//puzzle 5
+var puzzle5 = [
+    [0, 2], // NODE 00 // ROW 1
+    [0, 1], // NODE 01
+    [2, 0], // NODE 02
+    [2, 0], // NODE 03
+    [2, 0], // NODE 04 // ROW 2
+    [6, 0], // NODE 05
+    [1, 0], // NODE 06
+    [0, 0], // NODE 07
+    [2, 0], // NODE 08 // ROW 3
+    [6, 1], // NODE 09
+    [2, 1], // NODE 10
+    [2, 0], // NODE 11
+    [2, 0], // NODE 12 // ROW 4
+    [1, 1], // NODE 13
+    [2, 0], // NODE 14
+    [0, 3], // NODE 15
+    [0, 75], //start node - 16
+    [450, 175] //end node - 17
+];
+
+//puzzle 6
+var puzzle6 = [
+    [2, 0], // NODE 00 // ROW 1
+    [0, 2], // NODE 01
+    [2, 0], // NODE 02
+    [2, 0], // NODE 03
+    [2, 0], // NODE 04 // ROW 2
+    [2, 0], // NODE 05
+    [6, 0], // NODE 06
+    [2, 3], // NODE 07
+    [1, 0], // NODE 08 // ROW 3
+    [0, 1], // NODE 09
+    [1, 1], // NODE 10
+    [2, 1], // NODE 11
+    [2, 0], // NODE 12 // ROW 4
+    [2, 0], // NODE 13
+    [6, 0], // NODE 14
+    [6, 0], // NODE 15
+    [6, 75], //start node - 16
+    [450, 75] //end node - 17
+];
+
+//puzzle 7
+var puzzle7 = [
+    [2, 0], // NODE 00 // ROW 1
+    [6, 0], // NODE 01
+    [6, 0], // NODE 02
+    [2, 0], // NODE 03
+    [0, 0], // NODE 04 // ROW 2
+    [2, 0], // NODE 05
+    [2, 0], // NODE 06
+    [6, 0], // NODE 07
+    [6, 0], // NODE 08 // ROW 3
+    [2, 3], // NODE 09
+    [1, 1], // NODE 10
+    [2, 1], // NODE 11
+    [2, 0], // NODE 12 // ROW 4
+    [6, 0], // NODE 13
+    [6, 0], // NODE 14
+    [2, 0], // NODE 15
+    [6, 75], //start node - 16
+    [450, 375] //end node - 17
+];
+
+/* HARD */
+//puzzle 8
+var puzzle8 = [
+    [0, 1], // NODE 00 // ROW 1
+    [2, 0], // NODE 01
+    [2, 0], // NODE 02
+    [2, 3], // NODE 03
+    [1, 0], // NODE 04 // ROW 2
+    [6, 0], // NODE 05
+    [0, 3], // NODE 06
+    [1, 0], // NODE 07
+    [2, 2], // NODE 08 // ROW 3
+    [6, 1], // NODE 09
+    [2, 1], // NODE 10
+    [2, 0], // NODE 11
+    [2, 0], // NODE 12 // ROW 4
+    [0, 3], // NODE 13
+    [2, 0], // NODE 14
+    [1, 1], // NODE 15
+    [0, 375], //start node - 16
+    [450, 375] //end node - 17
+];
+
+//puzzle 9
+var puzzle9 = [
+    [6, 0], // NODE 00 // ROW 1
+    [2, 0], // NODE 01
+    [2, 0], // NODE 02
+    [2, 3], // NODE 03
+    [0, 2], // NODE 04 // ROW 2
+    [1, 0], // NODE 05
+    [2, 0], // NODE 06
+    [1, 1], // NODE 07
+    [2, 2], // NODE 08 // ROW 3
+    [2, 1], // NODE 09
+    [1, 1], // NODE 10
+    [6, 0], // NODE 11
+    [2, 0], // NODE 12 // ROW 4
+    [0, 3], // NODE 13
+    [0, 0], // NODE 14
+    [6, 0], // NODE 15
+    [0, 175], //start node - 16
+    [450, 175] //end node - 17
+];
+
+
+//puzzle 10
+var puzzle10 = [
+    [2, 3],
+    [2, 2],
+    [0, 1],
+    [2, 2],
+    [1, 0],
+    [6, 0],
+    [2, 0],
+    [6, 0],
+    [2, 1],
+    [2, 0],
+    [0, 3],
+    [2, 3],
+    [2, 1],
+    [2, 1],
+    [2, 2],
+    [0, 3],
+    [0, 375], //start node - 16
+    [450, 75] //end node - 17
+];
