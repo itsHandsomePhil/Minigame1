@@ -66,7 +66,7 @@ var puzzleLoad = [
     [0, 375], //start node - 16
     [450, 75] //end node - 17
 ];
-
+/*
 //puzzle 0
 var puzzle0 = [
     [2, 1], // NODE 00 // ROW 1
@@ -88,8 +88,29 @@ var puzzle0 = [
     [0, 375], //start node - 16
     [450, 75] //end node - 17
 ];
+*/
+var puzzle0 = [
+    [0, 2], // NODE 00 // ROW 1
+    [0, 1], // NODE 01
+    [2, 0], // NODE 02
+    [2, 0], // NODE 03
+    [2, 0], // NODE 04 // ROW 2
+    [6, 0], // NODE 05
+    [1, 0], // NODE 06
+    [0, 0], // NODE 07
+    [2, 0], // NODE 08 // ROW 3
+    [6, 1], // NODE 09
+    [2, 1], // NODE 10
+    [2, 0], // NODE 11
+    [2, 0], // NODE 12 // ROW 4
+    [1, 1], // NODE 13
+    [2, 0], // NODE 14
+    [0, 3], // NODE 15
+    [0, 75], //start node - 16
+    [450, 175] //end node - 17
+];
 
-//puzzleLoad = puzzle0;
+//var puzzleLoad = puzzle0;
 
 // setup the nodes, add 2 for start and end
 for (var n = 0; n < nodeCount + 2; n++) {
@@ -1249,7 +1270,7 @@ function nodeChargeTimer(cState) {
             nodes[cState][99] = false;
             nodes[cState][100] = false; //turn off the highlight
         }
-    }, 1000);
+    }, 300); // how fast we count down
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -1283,13 +1304,15 @@ function drawBeamHyper() {
             drawLine(nodes[16][0], nodes[16][1] + 27, beamWidth, nodes[16][1] + 27);
             beamWidth += beamSpeed;
         } else {
+
             xlineStartPos = beamWidth;
             ylineStartPos = nodes[16][1] + 26;
             beamWidth = 1;
             PREVNODE = NODENUM;
             NODENUM = NEXTNODE;
-            BEAMCOUNT = 9; //pause everything while we count
-            beamPath[0] = 12;
+            BEAMCOUNT = 1;
+
+            beamPath[beamStoreSpot] = NODENUM;
 
             //start storing the beam to draw all the time
             beamStore[0][0] = nodes[16][0];
@@ -1297,14 +1320,16 @@ function drawBeamHyper() {
             beamStore[0][2] = nodes[NODENUM][2];
             beamStore[0][3] = nodes[NODENUM][3] + 1;
 
-            beamStoreSpot = 1;
-            nodes[NODENUM][99] = true;
+            beamStoreSpot++;
 
-            //start the timer for the next one!
-            nodeChargeTimer(NODENUM);
+            //start the timer for the next one if its a circle!
+            if (nodes[NODENUM][0] == 2) {
+                BEAMCOUNT = 9; //pause everything while we count
+                nodeChargeTimer(NODENUM);
+                nodes[NODENUM][99] = true;
+            }
         }
     } else if (BEAMCOUNT == 1) {
-
         // IF ITS AN ALARM NODE
         if (nodes[NODENUM][0] == 6) {
             // we failed, oh no!
@@ -1685,7 +1710,7 @@ var puzzle5 = [
     [1, 1], // NODE 13
     [2, 0], // NODE 14
     [0, 3], // NODE 15
-    [0, 75], //start node - 16
+    [0, 77], //start node - 16
     [450, 175] //end node - 17
 ];
 
